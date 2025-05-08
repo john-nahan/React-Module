@@ -20,7 +20,6 @@ const ProductList = ({ productList, onAddToCart }: ProductListProps) => {
               {product.title}
             </h3>
             <p className="text-green-600 font-bold mb-1">${product.price}</p>
-            {/* <p className="text-sm text-gray-600">Rating: {product.rating}</p> */}
             <div className="flex items-center mb-4">
               <div className="flex items-center">
                 {[...Array(5)].map((_, i) => (

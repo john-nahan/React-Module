@@ -4,18 +4,29 @@ import NavBar from "./components/NavBar";
 import ProductList from "./components/ProductList";
 import { CartItem, Product } from "./types";
 import ShoppingCart from "./components/ShoppingCart";
-// import ProductDetails from "./components/ProductDetails";
-// import CartList from "./components/CartList";
+import ProductDetails from "./components/ProductDetails";
+import CartList from "./components/CartList";
 
 function App() {
   const [productList, setProductList] = useState<Product[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
 
   useEffect(() => {
-    fetch("https://dummyjson.com/products")
-      .then((res) => res.json())
-      .then((data) => setProductList(data.products));
+    // fetch("https://dummyjson.com/products")
+    //   .then((res) => res.json())
+    //   .then((data) => setProductList(data.products));
+    fetchProductList();
   }, []);
+
+  const fetchProductList = async () => {
+    try {
+      const res = await fetch("https://dummyjson.com/products");
+      const data = await res.json();
+      setProductList(data.products);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const addToCart = (product: Product): void => {
     const existingIndex = cart.findIndex((p) => p.product.id === product.id);
@@ -39,8 +50,8 @@ function App() {
       <NavBar cart={cart} onDelete={removeFromCart} />
       <ShoppingCart cart={cart} onDelete={removeFromCart} />
       <ProductList productList={productList} onAddToCart={addToCart} />
-      {/* <ProductDetails />
-      <CartList /> */}
+      <ProductDetails />
+      <CartList />
     </>
   );
 }

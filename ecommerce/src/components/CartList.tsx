@@ -13,32 +13,90 @@ interface CartListProps {
 }
 
 const CartList = () => {
-  const [cartList, setCartList] = useState<CartListProps[]>([]);
+  const [cartList, setCartList] = useState<CartListProps | null>(null);
   useEffect(() => {
-    fetch("https://dummyjson.com/carts")
-      .then((res) => res.json())
-      .then((data) => setCartList(data.carts));
+    // fetch("https://dummyjson.com/carts/1")
+    //   .then((res) => res.json())
+    //   .then((data) => setCartList(data));
+    fetCartList();
   }, []);
 
-  const totalPrice = cartList.reduce((sum, cart) => sum + cart.total, 0);
-
-  const handleDeleteItem = (productId: number) => {
-    setCartList(
-      cartList.map((cart) => ({
-        ...cart,
-        products: cart.products.filter((p) => p.id !== productId),
-        totalProducts: cart.products.filter((p) => p.id !== productId).length,
-        totalQuantity: cart.products
-          .filter((p) => p.id != productId)
-          .reduce((sum, p) => sum + p.quantity, 0),
-        total: cart.products
-          .filter((p) => p.id !== productId)
-          .reduce((sum, p) => sum + p.price * p.quantity, 0),
-      }))
-    );
+  const fetCartList = async () => {
+    try {
+      const res = await fetch("https://dummyjson.com/carts/1");
+      const data = await res.json();
+      setCartList(data);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
-  return cartList.length === 0 ? (
+  const handleDeleteItem = (productId: number) => {
+    if (!cartList) return;
+
+    const filteredProducts = cartList.products.filter(
+      (p) => p.id !== productId
+    );
+
+    setCartList({
+      ...cartList,
+      products: filteredProducts,
+      total: filteredProducts.reduce((sum, p) => sum + p.quantity * p.price, 0),
+      totalProducts: filteredProducts.length,
+      totalQuantity: filteredProducts.reduce((sum, p) => sum + p.quantity, 0),
+    });
+  };
+
+  const handleIncreaseItem = (productId: number) => {
+    if (!cartList) return;
+
+    const newCartList = { ...cartList };
+
+    newCartList.products = newCartList.products.map((p) => {
+      if (p.id === productId) {
+        return { ...p, quantity: p.quantity + 1 };
+      }
+      return p;
+    });
+
+    console.log(newCartList.products);
+
+    const totalQuantity = newCartList.products.reduce(
+      (sum, p) => sum + p.quantity,
+      0
+    );
+    const total = newCartList.products.reduce(
+      (sum, p) => sum + p.quantity * p.price,
+      0
+    );
+    setCartList({ ...newCartList, totalQuantity, total });
+  };
+
+  const handleDecreaseItem = (productId: number) => {
+    if (!cartList) return;
+
+    const newCart = { ...cartList };
+
+    newCart.products = newCart.products.map((p) => {
+      if (p.id === productId && p.quantity > 1) {
+        return { ...p, quantity: p.quantity - 1 };
+      }
+      return p;
+    });
+
+    const totalQuantity = newCart.products.reduce(
+      (sum, p) => sum + p.quantity,
+      0
+    );
+    const total = newCart.products.reduce(
+      (sum, p) => sum + p.quantity * p.price,
+      0
+    );
+
+    setCartList({ ...newCart, totalQuantity, total });
+  };
+
+  return !cartList ? (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 px-4 py-16">
       <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full text-center">
         <svg
@@ -67,59 +125,118 @@ const CartList = () => {
       <div className="w-3/5 p-4">
         <div className="flex justify-between items-center px-4 py-3 border-b border-gray-200 mb-4">
           <h1 className="text-2xl font-bold text-gray-800">Shopping Cart</h1>
-          <h3 className="text-lg text-gray-600">{cartList.length} items</h3>
+          <h3 className="text-lg text-gray-600">
+            {cartList.totalQuantity} items
+          </h3>
         </div>
         <div className="space-y-4">
-          {cartList.map((cart) => (
-            <div key={cart.id} className="bg-white rounded-lg shadow-sm">
-              {cart.products &&
-                cart.products.map((p) => (
-                  <div
-                    key={p.id}
-                    className="flex items-center justify-between p-4 border-b last:border-b-0 border-gray-100 hover:bg-gray-50"
-                  >
-                    <div className="flex items-center space-x-4">
-                      <img
-                        src={p.thumbnail}
-                        alt={p.title}
-                        className="w-24 h-24 object-cover rounded-md"
-                      />
-                      <div>
-                        <p className="font-medium text-gray-800">{p.title}</p>
-                        <p className="text-sm text-gray-500">
-                          {cart.totalQuantity}
-                        </p>
-                      </div>
+          <div className="bg-white rounded-lg shadow-sm">
+            {cartList.products &&
+              cartList.products.map((p) => (
+                <div
+                  key={p.id}
+                  className="flex items-center justify-between p-4 border-b last:border-b-0 border-gray-100 hover:bg-gray-50"
+                >
+                  <div className="flex items-center space-x-4 w-4/5">
+                    <img
+                      src={p.thumbnail}
+                      alt={p.title}
+                      className="w-24 h-24 object-cover rounded-md"
+                    />
+                    <div className="w-3/5 flex items-center">
+                      <p className="font-medium text-gray-800">{p.title}</p>
                     </div>
-                    <div className="flex items-center space-x-4">
-                      <p className="font-semibold text-gray-900">
-                        ${formatPrice(p.price)}
-                      </p>
-                      <button
-                        className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-red-100 hover:text-red-600 hover:cursor-pointer"
-                        aria-label="Remove item"
-                        onClick={() => handleDeleteItem(p.id)}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M6 18L18 6M6 6l12 12"
+                    <div className="w-2/5 flex justify-center">
+                      <form className="max-w-xs mx-auto">
+                        <div className="relative flex items-center max-w-[8rem]">
+                          <button
+                            type="button"
+                            id="decrement-button"
+                            data-input-counter-decrement="quantity-input"
+                            className="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
+                            onClick={() => handleDecreaseItem(p.id)}
+                          >
+                            <svg
+                              className="w-3 h-3 text-gray-900 dark:text-white"
+                              aria-hidden="true"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 18 2"
+                            >
+                              <path
+                                stroke="currentColor"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M1 1h16"
+                              />
+                            </svg>
+                          </button>
+                          <input
+                            type="text"
+                            id="quantity-input"
+                            data-input-counter
+                            min={1}
+                            aria-describedby="helper-text-explanation"
+                            className="bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            value={p.quantity}
+                            required
                           />
-                        </svg>
-                      </button>
+                          <button
+                            type="button"
+                            id={`increment-button-${p.id}`}
+                            data-input-counter-increment={`quantity-input-${p.id}`}
+                            className="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
+                            onClick={() => handleIncreaseItem(p.id)}
+                          >
+                            <svg
+                              className="w-3 h-3 text-gray-900 dark:text-white"
+                              aria-hidden="true"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 18 18"
+                            >
+                              <path
+                                stroke="currentColor"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 1v16M1 9h16"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      </form>
                     </div>
                   </div>
-                ))}
-            </div>
-          ))}
+                  <div className="w-1/5 flex items-center justify-end space-x-4">
+                    <p className="font-semibold text-gray-900">
+                      ${formatPrice(p.price)}
+                    </p>
+                    <button
+                      className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-red-100 hover:text-red-600 hover:cursor-pointer"
+                      aria-label="Remove item"
+                      onClick={() => handleDeleteItem(p.id)}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M6 18L18 6M6 6l12 12"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              ))}
+          </div>
         </div>
       </div>
       <div className="w-full md:w-2/5 md:h-screen bg-white p-6 rounded-lg shadow-md">
@@ -129,8 +246,8 @@ const CartList = () => {
           </p>
         </div>
         <div className="flex justify-between py-3">
-          <p className="text-gray-600">Items {cartList.length}</p>
-          <p className="font-medium">${formatPrice(totalPrice)}</p>
+          <p className="text-gray-600">Items {cartList.totalQuantity}</p>
+          <p className="font-medium">${formatPrice(cartList.total)}</p>
         </div>
         <div className="py-4 border-b border-gray-200">
           <p className="text-gray-600 text-sm font-medium mb-2">SHIPPING</p>
@@ -156,7 +273,7 @@ const CartList = () => {
         <div className="py-4 border-b border-gray-200">
           <div className="flex justify-between py-2">
             <p className="text-gray-600">Subtotal</p>
-            <p className="font-medium">${formatPrice(totalPrice)}</p>
+            <p className="font-medium">${formatPrice(cartList.total)}</p>
           </div>
           <div className="flex justify-between py-2">
             <p className="text-gray-600">Shipping</p>
@@ -165,7 +282,7 @@ const CartList = () => {
         </div>
         <div className="flex justify-between py-4 mb-6">
           <p className="text-lg font-bold">Total</p>
-          <p className="text-lg font-bold">${formatPrice(totalPrice)}</p>
+          <p className="text-lg font-bold">${formatPrice(cartList.total)}</p>
         </div>
         <div className="grid grid-cols-1 gap-4 mb-6">
           <button className="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition-colors font-medium">
