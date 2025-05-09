@@ -15,9 +15,6 @@ interface CartListProps {
 const CartList = () => {
   const [cartList, setCartList] = useState<CartListProps | null>(null);
   useEffect(() => {
-    // fetch("https://dummyjson.com/carts/1")
-    //   .then((res) => res.json())
-    //   .then((data) => setCartList(data));
     fetCartList();
   }, []);
 

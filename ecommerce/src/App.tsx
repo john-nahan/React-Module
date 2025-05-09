@@ -12,9 +12,6 @@ function App() {
   const [cart, setCart] = useState<CartItem[]>([]);
 
   useEffect(() => {
-    // fetch("https://dummyjson.com/products")
-    //   .then((res) => res.json())
-    //   .then((data) => setProductList(data.products));
     fetchProductList();
   }, []);
 
