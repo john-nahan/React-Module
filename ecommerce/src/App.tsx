@@ -45,7 +45,6 @@ function App() {
   return (
     <>
       <NavBar cart={cart} onDelete={removeFromCart} />
-      <ShoppingCart cart={cart} onDelete={removeFromCart} />
       <ProductList productList={productList} onAddToCart={addToCart} />
       <ProductDetails />
       <CartList />
