@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Product } from "../types";
+import { useParams } from "react-router";
 
 interface ProductDetailsProps {
   onAddToCart: (product: Product) => void;
@@ -7,14 +8,15 @@ interface ProductDetailsProps {
 
 const ProductDetails = ({ onAddToCart }: ProductDetailsProps) => {
   const [productDetails, setProductDetails] = useState<Product>();
+  const param = useParams();
   useEffect(() => {
-    fetch("https://dummyjson.com/products/1")
+    fetch(`https://dummyjson.com/products/${param.id}`)
       .then((res) => res.json())
       .then((data) => setProductDetails(data));
   }, []);
   return (
     productDetails && (
-      <div className="flex gap-4">
+      <div className="mt-20 flex gap-4">
         <div className="h-screen w-3/5">
           <div className="h-4/6 bg-white rounded-lg shadow-md overflow-hidden mb-4">
             <img
@@ -28,7 +30,7 @@ const ProductDetails = ({ onAddToCart }: ProductDetailsProps) => {
               <img
                 src={image}
                 alt={productDetails.title}
-                className="h-48 w-full object-cover rounded border-1 cursor-pointer hover:opacity-90"
+                className="h-35 w-20 w-full object-cover rounded border-1 cursor-pointer hover:opacity-90"
               ></img>
             ))}
           </div>

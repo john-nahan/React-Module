@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { CartProduct } from "../types";
 import { formatPrice } from "../utils/FormatNumbers";
+import { NavLink } from "react-router";
 
 interface CartModalProps {
   isOpen: boolean;
@@ -107,9 +108,14 @@ const CartModal = ({ isOpen, onClose, onDelete, cart }: CartModalProps) => {
                 <span>Total:</span>
                 <span>${formatPrice(totalPrice)}</span>
               </div>
-              <button className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-700">
-                Checkout
-              </button>
+              <NavLink to="/cart">
+                <button
+                  onClick={onClose}
+                  className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-700"
+                >
+                  Checkout
+                </button>
+              </NavLink>
             </div>
           )}
         </div>

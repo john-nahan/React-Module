@@ -1,3 +1,4 @@
+import { NavLink } from "react-router";
 import websiteLogo from "../assets/website_logo.png";
 import { CartProduct } from "../types";
 import SearchBar from "./SearchBar";
@@ -13,9 +14,9 @@ const NavBar = ({ cart, onDelete }: NavBarProps) => {
   return (
     <div className="fixed top-0 left-0 right-0 z-10 bg-white flex items-center justify-between px-4 py-2 shadow-md">
       <div className="flex-shrink-0">
-        <a href="#">
+        <NavLink to="/product">
           <img src={websiteLogo} alt="Website logo" className="w-15 h-15" />
-        </a>
+        </NavLink>
       </div>
       <SearchBar />
       <div className="flex items-center gap-4">
