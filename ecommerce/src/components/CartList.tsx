@@ -1,19 +1,9 @@
 import { useEffect, useState } from "react";
-import { CartProduct } from "../types";
+import { Cart } from "../types";
 import { formatPrice } from "../utils/FormatNumbers";
 
-interface CartListProps {
-  id: number;
-  products: CartProduct[];
-  total: number;
-  discountedTotal: number;
-  userId: number;
-  totalProducts: number;
-  totalQuantity: number;
-}
-
 const CartList = () => {
-  const [cartList, setCartList] = useState<CartListProps | null>(null);
+  const [cartList, setCartList] = useState<Cart | null>(null);
   useEffect(() => {
     fetCartList();
   }, []);
