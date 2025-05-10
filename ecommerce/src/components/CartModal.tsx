@@ -1,16 +1,15 @@
 import { useEffect } from "react";
-import { CartProduct } from "../types";
 import { formatPrice } from "../utils/FormatNumbers";
 import { NavLink } from "react-router";
+import { useCartContext } from "../context/useCartContext";
 
 interface CartModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onDelete: (productId: number) => void;
-  cart: CartProduct[];
 }
 
-const CartModal = ({ isOpen, onClose, onDelete, cart }: CartModalProps) => {
+const CartModal = ({ isOpen, onClose }: CartModalProps) => {
+  const { cart, removeFromCart } = useCartContext();
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -77,7 +76,7 @@ const CartModal = ({ isOpen, onClose, onDelete, cart }: CartModalProps) => {
                         <button
                           className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-red-100 hover:text-red-600 hover:cursor-pointer"
                           aria-label="Remove item"
-                          onClick={() => onDelete(item.id)}
+                          onClick={() => removeFromCart(item.id)}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"

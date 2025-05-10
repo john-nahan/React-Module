@@ -10,6 +10,13 @@ export interface Product {
   images: string[];
 }
 
+export interface ProductResponse {
+  products: Product[];
+  total: number;
+  skip: number;
+  limit: number;
+}
+
 export interface CartProduct {
   id: number;
   title: string;

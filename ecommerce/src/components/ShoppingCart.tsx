@@ -1,13 +1,9 @@
 import { useState } from "react";
-import { CartProduct } from "../types";
 import CartModal from "./CartModal";
+import { useCartContext } from "../context/useCartContext";
 
-interface ShoppingCartProps {
-  cart: CartProduct[];
-  onDelete: (productId: number) => void;
-}
-
-const ShoppingCart = ({ cart, onDelete }: ShoppingCartProps) => {
+const ShoppingCart = () => {
+  const { cart } = useCartContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const totalQuantity = cart.reduce((acc, item) => acc + item.quantity, 0);
   return (
@@ -37,12 +33,7 @@ const ShoppingCart = ({ cart, onDelete }: ShoppingCartProps) => {
         )}
       </button>
 
-      <CartModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onDelete={onDelete}
-        cart={cart}
-      />
+      <CartModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 };

@@ -1,20 +1,26 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Product } from "../types";
 import { useParams } from "react-router";
+import useFetchData from "../utils/useFetchData";
+import Spinner from "./Spinner";
+import { useCartContext } from "../context/useCartContext";
 
-interface ProductDetailsProps {
-  onAddToCart: (product: Product) => void;
-}
-
-const ProductDetails = ({ onAddToCart }: ProductDetailsProps) => {
-  const [productDetails, setProductDetails] = useState<Product>();
+const ProductDetails = () => {
+  const { addToCart } = useCartContext();
   const param = useParams();
+  const {
+    data: productDetails,
+    isLoading,
+    fetchData,
+  } = useFetchData<Product>(`https://dummyjson.com/products/${param.id}`);
+
   useEffect(() => {
-    fetch(`https://dummyjson.com/products/${param.id}`)
-      .then((res) => res.json())
-      .then((data) => setProductDetails(data));
+    fetchData();
   }, []);
-  return (
+
+  return isLoading ? (
+    <Spinner />
+  ) : (
     productDetails && (
       <div className="mt-20 flex gap-4">
         <div className="h-screen w-3/5">
@@ -71,7 +77,7 @@ const ProductDetails = ({ onAddToCart }: ProductDetailsProps) => {
           </div>
           <div className="flex justify-center w-full">
             <button
-              onClick={() => onAddToCart(productDetails)}
+              onClick={() => addToCart(productDetails)}
               className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg flex-1 transition  cursor-pointer"
             >
               Add to Cart

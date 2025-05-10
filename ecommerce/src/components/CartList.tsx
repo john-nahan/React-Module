@@ -1,87 +1,23 @@
-import { useEffect, useState } from "react";
-import { Cart } from "../types";
+import { useEffect } from "react";
 import { formatPrice } from "../utils/FormatNumbers";
+import useFetchData from "../utils/useFetchData";
+import { Cart } from "../types";
+import Spinner from "./Spinner";
 
 const CartList = () => {
-  const [cartList, setCartList] = useState<Cart | null>(null);
+  const {
+    data: cartList,
+    isLoading,
+    fetchData,
+  } = useFetchData<Cart>("https://dummyjson.com/carts/1");
+
   useEffect(() => {
-    fetCartList();
+    fetchData();
   }, []);
 
-  const fetCartList = async () => {
-    try {
-      const res = await fetch("https://dummyjson.com/carts/1");
-      const data = await res.json();
-      setCartList(data);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const handleDeleteItem = (productId: number) => {
-    if (!cartList) return;
-
-    const filteredProducts = cartList.products.filter(
-      (p) => p.id !== productId
-    );
-
-    setCartList({
-      ...cartList,
-      products: filteredProducts,
-      total: filteredProducts.reduce((sum, p) => sum + p.quantity * p.price, 0),
-      totalProducts: filteredProducts.length,
-      totalQuantity: filteredProducts.reduce((sum, p) => sum + p.quantity, 0),
-    });
-  };
-
-  const handleIncreaseItem = (productId: number) => {
-    if (!cartList) return;
-
-    const newCartList = { ...cartList };
-
-    newCartList.products = newCartList.products.map((p) => {
-      if (p.id === productId) {
-        return { ...p, quantity: p.quantity + 1 };
-      }
-      return p;
-    });
-
-    console.log(newCartList.products);
-
-    const totalQuantity = newCartList.products.reduce(
-      (sum, p) => sum + p.quantity,
-      0
-    );
-    const total = newCartList.products.reduce(
-      (sum, p) => sum + p.quantity * p.price,
-      0
-    );
-    setCartList({ ...newCartList, totalQuantity, total });
-  };
-
-  const handleDecreaseItem = (productId: number) => {
-    if (!cartList) return;
-
-    const newCart = { ...cartList };
-
-    newCart.products = newCart.products.map((p) => {
-      if (p.id === productId && p.quantity > 1) {
-        return { ...p, quantity: p.quantity - 1 };
-      }
-      return p;
-    });
-
-    const totalQuantity = newCart.products.reduce(
-      (sum, p) => sum + p.quantity,
-      0
-    );
-    const total = newCart.products.reduce(
-      (sum, p) => sum + p.quantity * p.price,
-      0
-    );
-
-    setCartList({ ...newCart, totalQuantity, total });
-  };
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return !cartList ? (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 px-4 py-16">
@@ -141,7 +77,7 @@ const CartList = () => {
                             id="decrement-button"
                             data-input-counter-decrement="quantity-input"
                             className="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
-                            onClick={() => handleDecreaseItem(p.id)}
+                            // onClick={() => handleDecreaseItem(p.id)}
                           >
                             <svg
                               className="w-3 h-3 text-gray-900 dark:text-white"
@@ -174,7 +110,7 @@ const CartList = () => {
                             id={`increment-button-${p.id}`}
                             data-input-counter-increment={`quantity-input-${p.id}`}
                             className="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
-                            onClick={() => handleIncreaseItem(p.id)}
+                            // onClick={() => handleIncreaseItem(p.id)}
                           >
                             <svg
                               className="w-3 h-3 text-gray-900 dark:text-white"
@@ -203,7 +139,7 @@ const CartList = () => {
                     <button
                       className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-red-100 hover:text-red-600 hover:cursor-pointer"
                       aria-label="Remove item"
-                      onClick={() => handleDeleteItem(p.id)}
+                      // onClick={() => handleDeleteItem(p.id)}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
