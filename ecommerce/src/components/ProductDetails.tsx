@@ -1,18 +1,12 @@
 import { useEffect, useState } from "react";
+import { Product } from "../types";
 
 interface ProductDetailsProps {
-  id: number;
-  title: string;
-  description: string;
-  price: number;
-  rating: number;
-  stock: number;
-  thumbnail: string;
-  images: string[];
+  onAddToCart: (product: Product) => void;
 }
 
-const ProductDetails = () => {
-  const [productDetails, setProductDetails] = useState<ProductDetailsProps>();
+const ProductDetails = ({ onAddToCart }: ProductDetailsProps) => {
+  const [productDetails, setProductDetails] = useState<Product>();
   useEffect(() => {
     fetch("https://dummyjson.com/products/1")
       .then((res) => res.json())
@@ -29,7 +23,7 @@ const ProductDetails = () => {
               className="w-full h-96 object-contain"
             />
           </div>
-          <div className="grid grid-cols-4 gap-2">
+          <div key={productDetails.id} className="grid grid-cols-4 gap-2">
             {productDetails.images.map((image) => (
               <img
                 src={image}
@@ -74,7 +68,10 @@ const ProductDetails = () => {
             <p className="text-gray-700">{productDetails.description}</p>
           </div>
           <div className="flex justify-center w-full">
-            <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg flex-1 transition">
+            <button
+              onClick={() => onAddToCart(productDetails)}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg flex-1 transition  cursor-pointer"
+            >
               Add to Cart
             </button>
           </div>
