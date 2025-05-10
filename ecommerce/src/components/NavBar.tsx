@@ -1,11 +1,11 @@
 import websiteLogo from "../assets/website_logo.png";
-import { CartItem } from "../types";
+import { CartProduct } from "../types";
 import SearchBar from "./SearchBar";
 import ShoppingCart from "./ShoppingCart";
 import UserInfo from "./UserInfo";
 
 interface NavBarProps {
-  cart: CartItem[];
+  cart: CartProduct[];
   onDelete: (productId: number) => void;
 }
 

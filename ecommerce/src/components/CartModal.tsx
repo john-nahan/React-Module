@@ -1,12 +1,12 @@
 import { useEffect } from "react";
-import { CartItem } from "../types";
+import { CartProduct } from "../types";
 import { formatPrice } from "../utils/FormatNumbers";
 
 interface CartModalProps {
   isOpen: boolean;
   onClose: () => void;
   onDelete: (productId: number) => void;
-  cart: CartItem[];
+  cart: CartProduct[];
 }
 
 const CartModal = ({ isOpen, onClose, onDelete, cart }: CartModalProps) => {
@@ -21,7 +21,7 @@ const CartModal = ({ isOpen, onClose, onDelete, cart }: CartModalProps) => {
   if (!isOpen) return null;
 
   const totalPrice = cart.reduce(
-    (sum, item) => sum + item.product.price * item.quantity,
+    (sum, item) => sum + item.price * item.quantity,
     0
   );
 
@@ -58,27 +58,25 @@ const CartModal = ({ isOpen, onClose, onDelete, cart }: CartModalProps) => {
               <>
                 {cart.map((item) => (
                   <div
-                    key={item.product.id}
+                    key={item.id}
                     className="flex items-center jutify-center mb-4 border-b pb-4"
                   >
                     <img
-                      src={item.product.thumbnail}
-                      alt={item.product.title}
+                      src={item.thumbnail}
+                      alt={item.title}
                       className="w-16 h-16 object-cover rounded"
                     />
                     <div className="ml-4 flex-grow">
-                      <h3 className="font-medium">{item.product.title}</h3>
+                      <h3 className="font-medium">{item.title}</h3>
                       <div className="flex justify-between mt-1">
                         <span>
-                          ${formatPrice(item.product.price)} x {item.quantity}
+                          ${formatPrice(item.price)} x {item.quantity}
                         </span>
-                        <span>
-                          ${formatPrice(item.product.price * item.quantity)}
-                        </span>
+                        <span>${formatPrice(item.price * item.quantity)}</span>
                         <button
                           className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-red-100 hover:text-red-600 hover:cursor-pointer"
                           aria-label="Remove item"
-                          onClick={() => onDelete(item.product.id)}
+                          onClick={() => onDelete(item.id)}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"

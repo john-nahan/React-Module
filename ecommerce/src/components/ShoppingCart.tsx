@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { CartItem } from "../types";
+import { CartProduct } from "../types";
 import CartModal from "./CartModal";
 
 interface ShoppingCartProps {
-  cart: CartItem[];
+  cart: CartProduct[];
   onDelete: (productId: number) => void;
 }
 

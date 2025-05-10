@@ -2,14 +2,13 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import NavBar from "./components/NavBar";
 import ProductList from "./components/ProductList";
-import { CartItem, Product } from "./types";
-import ShoppingCart from "./components/ShoppingCart";
+import { CartProduct, Product } from "./types";
 import ProductDetails from "./components/ProductDetails";
 import CartList from "./components/CartList";
 
 function App() {
   const [productList, setProductList] = useState<Product[]>([]);
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const [cart, setCart] = useState<CartProduct[]>([]);
 
   useEffect(() => {
     fetchProductList();
@@ -26,19 +25,20 @@ function App() {
   };
 
   const addToCart = (product: Product): void => {
-    const existingIndex = cart.findIndex((p) => p.product.id === product.id);
+    const {id, title, price, thumbnail} = product;
+    const existingIndex = cart.findIndex((p) => p.id === product.id);
     if (existingIndex !== -1) {
       const newCart = [...cart];
       newCart[existingIndex].quantity++;
       setCart(newCart);
     } else {
-      const newCart = [...cart, { product, quantity: 1 }];
+      const newCart = [...cart, {id, title, price, thumbnail, quantity: 1, total: product.price}];
       setCart(newCart);
     }
   };
 
   const removeFromCart = (productId: number) => {
-    const newCart = [...cart].filter((item) => item.product.id !== productId);
+    const newCart = [...cart].filter((item) => item.id !== productId);
     setCart(newCart);
   };
 
