@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./App.css";
 import NavBar from "./components/NavBar";
 import ProductList from "./components/ProductList";
@@ -8,7 +8,6 @@ import CartList from "./components/CartList";
 import { BrowserRouter, Route, Routes } from "react-router";
 
 function App() {
-  
   const [cart, setCart] = useState<CartProduct[]>([]);
   const [cartId, setCartId] = useState<number | null>(null);
 
@@ -96,15 +95,21 @@ function App() {
   };
 
   return (
-      <BrowserRouter>
+    <BrowserRouter>
       <NavBar cart={cart} onDelete={removeFromCart} />
       <Routes>
         <Route path="/" element={<ProductList onAddToCart={addToCart} />} />
         <Route path="/cart" element={<CartList />} />
-        <Route path="/product" element={<ProductList onAddToCart={addToCart} />} />
-        <Route path="/product/:id" element={<ProductDetails onAddToCart={addToCart} />} />
+        <Route
+          path="/product"
+          element={<ProductList onAddToCart={addToCart} />}
+        />
+        <Route
+          path="/product/:id"
+          element={<ProductDetails onAddToCart={addToCart} />}
+        />
       </Routes>
-    </BrowserRouter>    
+    </BrowserRouter>
   );
 }
 
