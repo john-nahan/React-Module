@@ -20,7 +20,7 @@ const CartList = () => {
   }
 
   return !cartList ? (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 px-4 py-16">
+    <div className="bg-white dark:bg-zinc-500 flex flex-col items-center justify-center min-h-screen bg-gray-50 px-4 py-16">
       <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full text-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -44,7 +44,7 @@ const CartList = () => {
       </div>
     </div>
   ) : (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="bg-white dark:bg-zinc-500 flex min-h-screen bg-gray-50">
       <div className="w-3/5 p-4">
         <div className="flex justify-between items-center px-4 py-3 border-b border-gray-200 mb-4">
           <h1 className="text-2xl font-bold text-gray-800">Shopping Cart</h1>
@@ -53,7 +53,7 @@ const CartList = () => {
           </h3>
         </div>
         <div className="space-y-4">
-          <div className="bg-white rounded-lg shadow-sm">
+          <div className="bg-white dark:bg-zinc-500 dark:border-zinc-800 rounded-lg shadow-sm">
             {cartList.products &&
               cartList.products.map((p) => (
                 <div
@@ -162,7 +162,7 @@ const CartList = () => {
           </div>
         </div>
       </div>
-      <div className="w-full md:w-2/5 md:h-screen bg-white p-6 rounded-lg shadow-md">
+      <div className="bg-white dark:bg-zinc-500 w-full md:w-2/5 md:h-screen bg-white p-6 rounded-lg shadow-md">
         <div className="mb-6">
           <p className="text-xl font-bold text-gray-800 pb-3 border-b border-gray-200">
             Order Summary

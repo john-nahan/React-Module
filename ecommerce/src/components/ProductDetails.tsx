@@ -3,7 +3,7 @@ import { Product } from "../types";
 import { useParams } from "react-router";
 import useFetchData from "../utils/useFetchData";
 import Spinner from "./Spinner";
-import { useCartContext } from "../context/useCartContext";
+import { useCartContext } from "../context/CartContext";
 
 const ProductDetails = () => {
   const { addToCart } = useCartContext();
@@ -22,9 +22,9 @@ const ProductDetails = () => {
     <Spinner />
   ) : (
     productDetails && (
-      <div className="mt-20 flex gap-4">
+      <div className="bg-white dark:bg-zinc-500 mt-20 flex gap-4">
         <div className="h-screen w-3/5">
-          <div className="h-4/6 bg-white rounded-lg shadow-md overflow-hidden mb-4">
+          <div className="h-4/6 bg-white dark:bg-zinc-500 rounded-lg shadow-md overflow-hidden mb-4">
             <img
               src={productDetails.thumbnail}
               alt={productDetails.title}
@@ -41,7 +41,7 @@ const ProductDetails = () => {
             ))}
           </div>
         </div>
-        <div className="h-screen w-2/5 bg-white rounded-lg shadow-md px-4">
+        <div className="h-screen w-2/5 bg-white dark:bg-zinc-500 rounded-lg shadow-md px-4">
           <div className="mb-4 mt-2">
             <span className="bg-blue-400 text-blue-800 text-sm font-semibold px-2.5 py-0.5 rounded">
               In Stock: {productDetails.stock}

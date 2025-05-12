@@ -1,13 +1,13 @@
 import { useState } from "react";
 import CartModal from "./CartModal";
-import { useCartContext } from "../context/useCartContext";
+import { useCartContext } from "../context/CartContext";
 
 const ShoppingCart = () => {
   const { cart } = useCartContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const totalQuantity = cart.reduce((acc, item) => acc + item.quantity, 0);
   return (
-    <div className="relative">
+    <div className="bg-white dark:bg-zinc-500 relative">
       <button
         className="relative p-2 hover:cursor-pointer"
         onClick={() => setIsModalOpen(true)}

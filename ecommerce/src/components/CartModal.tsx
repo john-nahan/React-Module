@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { formatPrice } from "../utils/FormatNumbers";
 import { NavLink } from "react-router";
-import { useCartContext } from "../context/useCartContext";
+import { useCartContext } from "../context/CartContext";
 
 interface CartModalProps {
   isOpen: boolean;
@@ -27,7 +27,7 @@ const CartModal = ({ isOpen, onClose }: CartModalProps) => {
 
   return (
     <>
-      <div className="relative z-40">
+      <div className="bg-white dark:bg-zinc-500 relative z-40">
         <div className="fixed bg-white rounded-lg h-9/10 w-96 shadow-xl top-auto right-0 flex flex-col">
           <div className="flex items-center justify-between border-b px-4 py-3 top-0">
             <h2 className="text-xl font-semibold">Your Cart</h2>

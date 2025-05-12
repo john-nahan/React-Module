@@ -3,7 +3,7 @@ import { ProductResponse } from "../types";
 import Spinner from "./Spinner";
 import { useEffect } from "react";
 import useFetchData from "../utils/useFetchData";
-import { useCartContext } from "../context/useCartContext";
+import { useCartContext } from "../context/CartContext";
 
 const ProductList = () => {
   const { addToCart } = useCartContext();
@@ -21,7 +21,7 @@ const ProductList = () => {
   return isLoading ? (
     <Spinner />
   ) : !productList ? null : (
-    <div className="pt-16">
+    <div className="pt-16 bg-white dark:bg-zinc-500">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 p-4">
         {productList.map((product) => (
           <div key={product.id} className="shadow-md rounded-lg p-4 relative">
